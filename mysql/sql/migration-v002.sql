@@ -6,3 +6,8 @@ CREATE TABLE utilisateurs (
     age INT,
     date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+INSERT INTO utilisateurs (nom, email, age) VALUES
+    ('Alice Martin', 'alice.martin@ynov.com', 22),
+    ('Baptiste Dupont', 'baptiste.dupont@ynov.com', 25),
+    ('Camille Bernard', 'camille.bernard@ynov.com', 21);
