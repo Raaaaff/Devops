@@ -1,0 +1,40 @@
+services:
+
+  db:
+    image: mysql:9.2
+
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - ../mysql/sql:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: "mysql --user=$$MYSQL_USER --password=$$MYSQL_ROOT_PASSWORD --execute \"SHOW DATABASES; USE ynov_ci;\" || exit 1"
+      interval: 10s
+      timeout: 10s
+      retries: 3
+  
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+  server:
+    build:
+      context: ../python
+      dockerfile: Dockerfile 
+    ports:
+      - 8000:8000
+    volumes:
+      - ../python:/python
+    environment:
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_HOST=db
+      - MYSQL_DATABASE
+      - MYSQL_USER
+    depends_on:
+      db:
+        condition: service_healthy
+
+    command: ["uvicorn", "main:app", "--proxy-headers", "--host", "0.0.0.0", "--port", "8000"]
