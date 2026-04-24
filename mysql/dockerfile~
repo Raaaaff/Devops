@@ -1,5 +1,0 @@
-#Create MySQL Image for JSP Toturial Application
-FROM mysql:9.2
-ENV MYSQL_ROOT_PASSWORD=bonsoir
-COPY ./migration-v001.sql /docker-entrypoint-initdb.d
-EXPOSE 3306

@@ -2,6 +2,7 @@ import mysql.connector
 import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from motor.motor_asyncio import AsyncIOMotorClient
 
 app = FastAPI()
 origins = ["*"]
@@ -14,7 +15,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Create a connection to the database
+# Mongo
+MONGO_URL = os.getenv("MONGO_URL", f"mongodb://{os.getenv('MONGO_ROOT_USER')}:{os.getenv('MONGO_ROOT_PASSWORD')}@{os.getenv('MONGO_HOST', 'mongo')}:27017")
+client = AsyncIOMotorClient(MONGO_URL)
+db = client.blog_db
+
+@app.get("/posts")
+async def get_posts():
+    cursor = db.posts.find({}, {"_id": 0})
+    posts = await cursor.to_list(length=100)
+    return posts
+
+#SQL
 
 @app.get("/users")
 async def get_users():
