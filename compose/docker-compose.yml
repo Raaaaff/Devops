@@ -8,6 +8,7 @@ services:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     volumes:
       - ../mysql/sql:/docker-entrypoint-initdb.d
+      - mysql_data:/var/lib/mysql
     healthcheck:
       test: "bash -c \"mysql --user=$$MYSQL_USER --password=$$MYSQL_ROOT_PASSWORD --execute \\\"SELECT COUNT(*) FROM ynov_ci.utilisateurs HAVING COUNT(*) = 4;\\\" || exit 1\""
       interval: 5s
@@ -15,7 +16,9 @@ services:
       retries: 4
 
   mongo:
-    image: mongodb/mongodb-community-server:8.0-ubi8-slim
+    build:
+      context: ../mongo
+      dockerfile: Dockerfile 
     restart: on-failure
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER}
@@ -23,8 +26,7 @@ services:
       - MONGO_INITDB_DATABASE=${MONGO_DATABASE}
     volumes:
       - ../mongo:/docker-entrypoint-initdb.d/
-    ports:
-      - 27017:27017
+      - mongo_data:/data/db
     healthcheck:
       test: "mongosh --username $$MONGO_INITDB_ROOT_USERNAME --password $$MONGO_INITDB_ROOT_PASSWORD --eval \"const count = db.getSiblingDB('blog_db').posts.countDocuments(); if (count !== 5) { quit(1); }\" || exit 1"
       interval: 5s
@@ -87,3 +89,7 @@ services:
       timeout: 5s
       retries: 4
       start_period: 2s
+
+volumes:
+  mysql_data:
+  mongo_data:
