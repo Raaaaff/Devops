@@ -9,7 +9,7 @@ services:
     volumes:
       - ../mysql/sql:/docker-entrypoint-initdb.d
     healthcheck:
-      test: "mysql --user=$$MYSQL_USER --password=$$MYSQL_ROOT_PASSWORD --execute \"SHOW DATABASES; USE ynov_ci;\" || exit 1"
+      test: "bash -c \"mysql --user=$$MYSQL_USER --password=$$MYSQL_ROOT_PASSWORD --execute \\\"SELECT COUNT(*) FROM ynov_ci.utilisateurs HAVING COUNT(*) = 4;\\\" || exit 1\""
       interval: 5s
       timeout: 5s
       retries: 4
@@ -26,7 +26,7 @@ services:
     ports:
       - 27017:27017
     healthcheck:
-      test: "mongosh --username $$MONGO_INITDB_ROOT_USERNAME --password $$MONGO_INITDB_ROOT_PASSWORD --eval \"use blog_db; db.posts.countDocuments()\" || exit 1"
+      test: "mongosh --username $$MONGO_INITDB_ROOT_USERNAME --password $$MONGO_INITDB_ROOT_PASSWORD --eval \"const count = db.getSiblingDB('blog_db').posts.countDocuments(); if (count !== 5) { quit(1); }\" || exit 1"
       interval: 5s
       timeout: 5s
       retries: 4
@@ -80,3 +80,10 @@ services:
         condition: service_healthy
 
     command: ["uvicorn", "main:app", "--proxy-headers", "--host", "0.0.0.0", "--port", "8000"]
+
+    healthcheck:
+      test: "curl -sf http://localhost:8000/posts && curl -sf http://localhost:8000/users || exit 1"
+      interval: 5s
+      timeout: 5s
+      retries: 4
+      start_period: 2s
