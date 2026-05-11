@@ -1,4 +1,4 @@
-FROM mongo/mongo:8.3.1-nanoserver
+FROM mongodb/mongodb-community-server:8.0-ubuntu2204-slim
 ENV MONGO_INITDB_DATABASE=blog_db
 USER mongod
 EXPOSE 27017
