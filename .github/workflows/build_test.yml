@@ -31,6 +31,18 @@ jobs:
           only-severities: critical,high
           exit-code: false
 
+      - name: Build image for scanning
+        run: docker build -t api:1.0.0 -f ./python/Dockerfile .
+
+      - name: Docker Scout Scan API
+        uses: docker/scout-action@v1
+        with:
+          command: cves,recommendations
+          image: api:1.0.0
+          file: ./python/Dockerfile
+          only-severities: critical,high
+          exit-code: false
+
   docker-compose:
     needs: build_test
       
