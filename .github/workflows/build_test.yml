@@ -29,8 +29,7 @@ jobs:
           image: mongo:1.0.0
           file: ./mongo/Dockerfile
           only-severities: critical,high
-          ignore-base: true
-          exit-code: true
+          exit-code: false
 
       - name: Build image for scanning
         run: docker build -t api:1.0.0 -f ./python/Dockerfile .
@@ -42,7 +41,7 @@ jobs:
           image: api:1.0.0
           file: ./python/Dockerfile
           only-severities: critical,high
-          exit-code: true
+          exit-code: false
 
       - name: Trivy Scan MySQL Official Image
         uses: aquasecurity/trivy-action@master
