@@ -68,3 +68,15 @@ jobs:
       
             # Mongo Express
             ME_CONFIG_MONGODB_SERVER: mongo
+
+      - name: Script vérif conteneurs 
+        run: |
+          chmod +x ./health_check.sh
+          ./health_check.sh
+        env:
+          COMPOSE_FILE: ./compose/docker-compose.yml
+          MAX_WAIT: 120
+          POLL_INTERVAL: 5
+          MONGO_ROOT_USER: ${{ secrets.MONGO_ROOT_USER }}
+          MONGO_ROOT_PASSWORD: ${{ secrets.MONGO_ROOT_PASSWORD }}
+          MONGO_DATABASE: blog_db
