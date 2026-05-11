@@ -39,5 +39,5 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Build the task
-        run: docker compose up -d
+        run: docker compose up -f ./compose/docker-compose.yml -d
         
