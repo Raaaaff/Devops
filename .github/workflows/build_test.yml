@@ -22,26 +22,26 @@ jobs:
           username: ${{secrets.DOCKERHUB_USERNAME}}
           password: ${{secrets.DOCKERHUB_TOKEN}}
           
-#      - name: Docker Scout Scan MongoDB
-#        uses: docker/scout-action@v1
-#        with:
-#          command: cves,recommendations
-#          image: mongo:1.0.0
-#          file: ./mongo/Dockerfile
-#          only-severities: critical,high
-#          exit-code: false
+      - name: Docker Scout Scan MongoDB
+        uses: docker/scout-action@v1
+        with:
+          command: cves,recommendations
+          image: mongo:1.0.0
+          file: ./mongo/Dockerfile
+          only-severities: critical,high
+          exit-code: false
 
       - name: Build image for scanning
         run: docker build -t api:1.0.0 -f ./python/Dockerfile .
 
-#      - name: Docker Scout Scan API
-#        uses: docker/scout-action@v1
-#        with:
-#          command: cves,recommendations
-#          image: api:1.0.0
-#          file: ./python/Dockerfile
-#          only-severities: critical,high
-#          exit-code: false
+      - name: Docker Scout Scan API
+        uses: docker/scout-action@v1
+        with:
+          command: cves,recommendations
+          image: api:1.0.0
+          file: ./python/Dockerfile
+          only-severities: critical,high
+          exit-code: false
 
       - name: Trivy Scan MySQL Official Image
         uses: aquasecurity/trivy-action@master
