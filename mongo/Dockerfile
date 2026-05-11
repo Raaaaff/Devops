@@ -1,4 +1,4 @@
-FROM mongodb/mongodb-community-server:8.0-ubuntu2204-slim
+FROM cgr.dev/chainguard/mongodb:latest
 ENV MONGO_INITDB_DATABASE=blog_db
 USER mongod
 EXPOSE 27017
