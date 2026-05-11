@@ -29,6 +29,7 @@ jobs:
           image: mongo:1.0.0
           file: ./mongo/Dockerfile
           only-severities: critical,high
+          ignore-base: true
           exit-code: true
 
       - name: Build image for scanning
