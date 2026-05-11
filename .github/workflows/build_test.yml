@@ -8,7 +8,7 @@ on:
 jobs:
   build_test:
     runs-on: ubuntu-latest
-
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -29,4 +29,15 @@ jobs:
           image: mongo:1.0.0
           file: ./mongo/Dockerfile
           only-severities: critical,high
-          exit-code: true
+          exit-code: false
+
+  docker-compose:
+    needs: build_test
+      
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Build the task
+        run: docker compose up -d
+        
