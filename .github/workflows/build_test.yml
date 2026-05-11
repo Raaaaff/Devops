@@ -25,7 +25,7 @@ jobs:
       - name: Docker Scout Scan MongoDB
         uses: docker/scout-action@v1
         with:
-          command: cves,recommendations
+          command: recommendations,cves
           image: mongo:1.0.0
           file: ./mongo/Dockerfile
           only-severities: critical,high
@@ -37,7 +37,7 @@ jobs:
       - name: Docker Scout Scan API
         uses: docker/scout-action@v1
         with:
-          command: cves,recommendations
+          command: recommendations,cves
           image: api:1.0.0
           file: ./python/Dockerfile
           only-severities: critical,high
